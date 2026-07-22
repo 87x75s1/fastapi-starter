@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="product-list">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="product-image" src="{{item.image || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="product-info">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-desc">{{item.description}}</text>
+        <view class="product-bottom">
+          <text class="product-price">¥{{(item.price / 100).toFixed(2)}}</text>
+          <text class="product-category" wx:if="{{item.category}}">{{item.category}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  <view class="no-more" wx:if="{{noMore && products.length > 0}}">
+    <text>没有更多了</text>
+  </view>
+  <view class="empty" wx:if="{{!loading && products.length === 0}}">
+    <text>暂无商品</text>
+  </view>
+</view>

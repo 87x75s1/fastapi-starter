@@ -1,0 +1,40 @@
+.container { padding: 20rpx; background: #f5f5f5; min-height: 100vh; }
+
+.section {
+  background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx;
+}
+.section-title { font-size: 32rpx; font-weight: bold; color: #333; margin-bottom: 20rpx; }
+
+.feedback-input {
+  width: 100%; height: 200rpx; border: 1rpx solid #e0e0e0; border-radius: 12rpx;
+  padding: 16rpx; font-size: 28rpx; box-sizing: border-box;
+}
+.contact-input {
+  width: 100%; border: 1rpx solid #e0e0e0; border-radius: 12rpx;
+  padding: 16rpx; font-size: 28rpx; margin-top: 16rpx; box-sizing: border-box;
+}
+.btn-submit {
+  background: #4CAF50; color: #fff; border-radius: 50rpx; font-size: 30rpx;
+  margin-top: 20rpx; border: none;
+}
+
+.feedback-item {
+  padding: 16rpx 0; border-bottom: 1rpx solid #f0f0f0;
+}
+.feedback-item:last-child { border-bottom: none; }
+
+.feedback-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.feedback-status { font-size: 24rpx; font-weight: bold; }
+.status-0 { color: #ff9800; }
+.status-1 { color: #4CAF50; }
+.feedback-time { font-size: 22rpx; color: #999; }
+
+.feedback-content { font-size: 28rpx; color: #333; line-height: 1.6; }
+
+.feedback-reply {
+  background: #f5f5f5; border-radius: 12rpx; padding: 16rpx; margin-top: 12rpx;
+}
+.reply-label { font-size: 24rpx; color: #4CAF50; font-weight: bold; }
+.reply-text { font-size: 26rpx; color: #666; line-height: 1.5; }
+
+.loading, .no-more, .empty { text-align: center; padding: 40rpx; color: #999; font-size: 26rpx; }

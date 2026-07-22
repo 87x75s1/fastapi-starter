@@ -23,6 +23,11 @@ from app.core.logging import setup_logging
 # 导入模块路由
 from app.modules.user.router import router as user_router
 from app.modules.upload.router import router as upload_router
+from app.modules.product.router import router as product_router
+from app.modules.order.router import router as order_router
+from app.modules.address.router import router as address_router
+from app.modules.feedback.router import router as feedback_router
+from app.modules.sys_config.router import router as sys_config_router
 
 settings = get_settings()
 
@@ -105,11 +110,17 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.include_router(user_router)
 app.include_router(upload_router)
+app.include_router(product_router)
+app.include_router(order_router)
+app.include_router(address_router)
+app.include_router(feedback_router)
+app.include_router(sys_config_router)
 
 
 # ========== 健康检查 ==========
 
 @app.get("/", tags=["系统"], summary="健康检查")
+@app.get("/health", tags=["系统"], summary="健康检查")
 async def health_check():
     """服务健康检查接口"""
     return success(data={"status": "ok", "version": settings.APP_VERSION}, message="服务运行正常")

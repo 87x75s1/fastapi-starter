@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="address-list">
+    <view class="address-card" wx:for="{{addresses}}" wx:key="id">
+      <view class="address-info" bindtap="goEdit" data-id="{{item.id}}">
+        <view class="address-top">
+          <text class="name">{{item.name}}</text>
+          <text class="phone">{{item.phone}}</text>
+          <text class="default-tag" wx:if="{{item.is_default === 1}}">默认</text>
+        </view>
+        <text class="address-detail">{{item.province}}{{item.city}}{{item.district}} {{item.detail}}</text>
+      </view>
+      <view class="address-actions">
+        <text class="action-btn" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{item.is_default !== 1}}">设为默认</text>
+        <text class="action-btn delete" bindtap="deleteAddress" data-id="{{item.id}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && addresses.length === 0}}">
+    <text>暂无收货地址</text>
+  </view>
+
+  <view class="add-btn-wrap">
+    <button class="btn-add" bindtap="goAdd">新增收货地址</button>
+  </view>
+</view>
