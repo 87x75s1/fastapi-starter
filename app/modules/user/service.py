@@ -44,10 +44,17 @@ class UserService(BaseService):
 
         # 密码哈希后存储
         hashed_pwd = hash_password(password)
-        user = await cls.create(db, {
+        user_data = {
             "phone": phone,
             "password": hashed_pwd,
-        })
+        }
+
+        # 自动设为管理员
+        from app.core.init_data import ADMIN_PHONE
+        if phone == ADMIN_PHONE:
+            user_data["role"] = 1
+
+        user = await cls.create(db, user_data)
         return user
 
     @classmethod

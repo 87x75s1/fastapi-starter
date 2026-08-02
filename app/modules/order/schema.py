@@ -48,6 +48,9 @@ class OrderResponse(BaseModel):
     status: int = 0
     remark: str = ""
     address_snapshot: str = ""
+    paid_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    cancel_reason: str = ""
     items: list[OrderItemResponse] = []
     created_at: Optional[str] = None
     updated_at: Optional[str] = None

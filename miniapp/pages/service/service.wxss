@@ -1,0 +1,66 @@
+/* ========== 客服 - 炭灰极简轻奢 高保真 ========== */
+
+.page-container {
+  min-height: 100vh;
+  background-color: #F8F9FA;
+}
+
+/* 自定义导航栏 */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: #FFFFFF;
+  box-shadow: 0 0.5px 0 #EEEEEE;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32rpx;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #3A3A3A;
+  letter-spacing: 3rpx;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 240rpx;
+}
+
+.empty-icon-wrap {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background-color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36rpx;
+}
+
+.empty-icon-text {
+  font-size: 44rpx;
+  color: #CCCCCC;
+}
+
+.empty-text {
+  font-size: 30rpx;
+  color: #3A3A3A;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #BBBBBB;
+}

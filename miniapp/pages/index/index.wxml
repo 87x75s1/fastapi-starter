@@ -1,68 +1,86 @@
-<view class="container">
-  <!-- 顶部横幅 -->
-  <view class="banner">
-    <view class="banner-content">
-      <text class="banner-title">FastAPI 小程序</text>
-      <text class="banner-desc">开箱即用的微信小程序后台模板</text>
-    </view>
-    <text class="banner-icon">🚀</text>
-  </view>
-
-  <!-- 功能入口 -->
-  <view class="features">
-    <view class="feature-item" bindtap="goProfile">
-      <view class="feature-icon-wrap" style="background: #E8F5E9;">
-        <text class="feature-icon">👤</text>
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-title">优品商城</view>
+      <view class="nav-right">
+        <view class="nav-icon-btn" bindtap="onSearchTap">
+          <text class="nav-icon">⌕</text>
+        </view>
+        <view class="nav-icon-btn" bindtap="onMessageTap">
+          <text class="nav-icon">✉</text>
+        </view>
       </view>
-      <text class="feature-name">个人中心</text>
-    </view>
-    <view class="feature-item" bindtap="goUpload">
-      <view class="feature-icon-wrap" style="background: #FFF3E0;">
-        <text class="feature-icon">📷</text>
-      </view>
-      <text class="feature-name">图片上传</text>
-    </view>
-    <view class="feature-item" bindtap="goLogin">
-      <view class="feature-icon-wrap" style="background: #E3F2FD;">
-        <text class="feature-icon">🔐</text>
-      </view>
-      <text class="feature-name">登录注册</text>
-    </view>
-    <view class="feature-item" bindtap="checkBackend">
-      <view class="feature-icon-wrap" style="background: #F3E5F5;">
-        <text class="feature-icon">🔗</text>
-      </view>
-      <text class="feature-name">后端状态</text>
     </view>
   </view>
+  <view style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-  <!-- 后端状态 -->
+  <!-- 静态浅灰弱文案公告 -->
+  <view class="notice-bar">
+    <text class="notice-text">{{noticeText}}</text>
+  </view>
+
+  <!-- 为你精选 -->
   <view class="section">
-    <view class="section-title">后端服务状态</view>
-    <view class="status-card">
-      <view class="status-row">
-        <text class="status-label">服务地址</text>
-        <text class="status-value">{{baseUrl}}</text>
+    <view class="section-header">
+      <text class="section-title">为你精选</text>
+      <view class="section-more" bindtap="onViewMore">
+        <text class="section-more-text">更多</text>
+        <text class="section-more-arrow">›</text>
       </view>
-      <view class="status-row">
-        <text class="status-label">连接状态</text>
-        <text class="status-value {{connected ? 'status-ok' : 'status-err'}}">{{connected ? '✅ 已连接' : '❌ 未连接'}}</text>
-      </view>
-      <view class="status-row" wx:if="{{connected}}">
-        <text class="status-label">登录状态</text>
-        <text class="status-value">{{isLoggedIn ? '✅ 已登录' : '⚠️ 未登录'}}</text>
+    </view>
+    <view class="product-grid">
+      <view class="product-card" wx:for="{{featuredProducts}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+        <view class="product-img-wrap">
+          <image class="product-img" src="{{item.image}}" mode="aspectFill" binderror="onImgError" />
+          <view class="img-placeholder" wx:if="{{!item.image}}">
+            <view class="placeholder-box"></view>
+          </view>
+        </view>
+        <text class="product-name ellipsis-2">{{item.name}}</text>
+        <view class="product-bottom">
+          <view class="product-price">
+            <text class="price-symbol">¥</text>
+            <text class="price-value">{{item.price}}</text>
+          </view>
+          <view class="cart-btn tap-scale" catchtap="onAddCart" data-id="{{item.id}}">
+            <text class="cart-btn-icon">+</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
 
-  <!-- 技术栈 -->
+  <!-- 品质好物 -->
   <view class="section">
-    <view class="section-title">技术栈</view>
-    <view class="tech-list">
-      <view class="tech-item" wx:for="{{techStack}}" wx:key="name">
-        <text class="tech-name">{{item.name}}</text>
-        <text class="tech-desc">{{item.desc}}</text>
+    <view class="section-header">
+      <text class="section-title">品质好物</text>
+      <view class="section-more" bindtap="onViewMore">
+        <text class="section-more-text">更多</text>
+        <text class="section-more-arrow">›</text>
+      </view>
+    </view>
+    <view class="product-grid">
+      <view class="product-card" wx:for="{{qualityProducts}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+        <view class="product-img-wrap">
+          <image class="product-img" src="{{item.image}}" mode="aspectFill" binderror="onImgError" />
+          <view class="img-placeholder" wx:if="{{!item.image}}">
+            <view class="placeholder-box"></view>
+          </view>
+        </view>
+        <text class="product-name ellipsis-2">{{item.name}}</text>
+        <view class="product-bottom">
+          <view class="product-price">
+            <text class="price-symbol">¥</text>
+            <text class="price-value">{{item.price}}</text>
+          </view>
+          <view class="cart-btn tap-scale" catchtap="onAddCart" data-id="{{item.id}}">
+            <text class="cart-btn-icon">+</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
+
+  <view class="bottom-space"></view>
 </view>

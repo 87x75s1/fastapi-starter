@@ -15,6 +15,7 @@ class Product(Base):
     price = Column(Integer, nullable=False, comment="价格（单位：分）")
     image = Column(String(255), default="", comment="商品图片URL")
     category = Column(String(50), default="", comment="分类")
+    stock = Column(Integer, default=0, comment="库存数量，0表示不限")
     status = Column(Integer, default=1, comment="状态：0下架 1上架")
     sort_order = Column(Integer, default=0, comment="排序值，越大越靠前")
     created_at = Column(DateTime, server_default=func.now(), comment="创建时间")
@@ -28,6 +29,7 @@ class Product(Base):
             "price": self.price,
             "image": self.image,
             "category": self.category,
+            "stock": self.stock,
             "status": self.status,
             "sort_order": self.sort_order,
             "created_at": self.created_at.isoformat() if self.created_at else None,

@@ -1,0 +1,72 @@
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-title">商品分类</view>
+    </view>
+  </view>
+  <view style="height: {{statusBarHeight + navBarHeight}}px;"></view>
+
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">⌕</text>
+      <input class="search-input" type="text" placeholder="请搜索您想要的商品" placeholder-class="search-placeholder" confirm-type="search" bindconfirm="onSearch" />
+    </view>
+  </view>
+
+  <!-- 横向切换标签 -->
+  <view class="switch-bar">
+    <view class="switch-item {{currentTab === 0 ? 'switch-active' : ''}}" bindtap="onSwitchTab" data-tab="0">
+      <text class="switch-text {{currentTab === 0 ? 'switch-text-active' : ''}}">手机端</text>
+    </view>
+    <view class="switch-item {{currentTab === 1 ? 'switch-active' : ''}}" bindtap="onSwitchTab" data-tab="1">
+      <text class="switch-text {{currentTab === 1 ? 'switch-text-active' : ''}}">电脑端</text>
+    </view>
+  </view>
+
+  <!-- 主体：左右分栏 -->
+  <view class="main-content">
+    <!-- 左侧分类菜单 -->
+    <scroll-view class="side-menu" scroll-y scroll-into-view="{{scrollIntoId}}">
+      <view class="menu-item {{currentCatId === item.id ? 'menu-active' : ''}}" wx:for="{{categories}}" wx:key="id" id="cat-{{item.id}}" bindtap="onCatTap" data-id="{{item.id}}">
+        <text class="menu-text {{currentCatId === item.id ? 'menu-text-active' : ''}}">{{item.name}}</text>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧商品区域 -->
+    <scroll-view class="product-area" scroll-y>
+      <!-- 排序标签 -->
+      <view class="sort-bar">
+        <view class="sort-item" wx:for="{{sortOptions}}" wx:key="index" bindtap="onSortTap" data-idx="{{index}}">
+          <text class="sort-text {{currentSort === index ? 'sort-text-active' : ''}}">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 商品列表 -->
+      <view class="product-grid">
+        <view class="product-card" wx:for="{{displayProducts}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+          <view class="product-img-wrap">
+            <image class="product-img" src="{{item.image}}" mode="aspectFill" binderror="onImgError" />
+            <view class="img-placeholder" wx:if="{{!item.image}}">
+              <view class="placeholder-box"></view>
+            </view>
+          </view>
+          <text class="product-name ellipsis-2">{{item.name}}</text>
+          <text class="product-sales">已售 {{item.sales}}件</text>
+          <view class="product-bottom">
+            <view class="product-price">
+              <text class="price-symbol">¥</text>
+              <text class="price-value">{{item.price}}</text>
+            </view>
+            <view class="cart-btn tap-scale" catchtap="onAddCart" data-id="{{item.id}}">
+              <text class="cart-btn-icon">+</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-space"></view>
+    </scroll-view>
+  </view>
+</view>

@@ -44,7 +44,12 @@ function uploadImage(options = {}) {
             const data = JSON.parse(res.data)
             if (data.code === 0) {
               wx.showToast({ title: '上传成功', icon: 'success' })
-              resolve(data.data)
+              // 将相对路径转为完整URL
+              const result = data.data
+              if (result.file_url && !result.file_url.startsWith('http')) {
+                result.file_url = BASE_URL + result.file_url
+              }
+              resolve(result)
             } else {
               wx.showToast({ title: data.message || '上传失败', icon: 'none' })
               reject(new Error(data.message))
@@ -66,5 +71,17 @@ function uploadImage(options = {}) {
 }
 
 module.exports = {
-  uploadImage
+  uploadImage,
+  /**
+   * 将图片路径转为完整URL
+   * 后端返回的 image 可能是相对路径（/static/xxx.png）或完整URL
+   * @param {string} path - 图片路径
+   * @returns {string} 完整URL或空字符串
+   */
+  resolveImageUrl(path) {
+    if (!path) return ''
+    if (path.startsWith('http://') || path.startsWith('https://')) return path
+    if (path.startsWith('/')) return BASE_URL + path
+    return path
+  }
 }

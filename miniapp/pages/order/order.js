@@ -39,7 +39,23 @@ Page({
       if (this.data.currentTab >= 0) params.status = this.data.currentTab
 
       const data = await http.get('/api/order/list', params, { auth: true, loading: false })
-      const orders = [...this.data.orders, ...data.items]
+      const items = data.items.map(order => {
+        order.total_amount_text = (order.total_amount / 100).toFixed(2)
+        if (order.items) {
+          order.items = order.items.map(oi => {
+            oi.price_text = (oi.price / 100).toFixed(2)
+            return oi
+          })
+        }
+        // 解析地址快照
+        if (order.address_snapshot) {
+          try {
+            order.address_info = JSON.parse(order.address_snapshot)
+          } catch (e) { order.address_info = null }
+        }
+        return order
+      })
+      const orders = [...this.data.orders, ...items]
       this.setData({
         orders,
         total: data.total,
@@ -62,6 +78,16 @@ Page({
     this.loadOrders()
   },
 
+  async onPayOrder(e) {
+    const orderId = e.currentTarget.dataset.id
+    try {
+      await http.post('/api/payment/mock-pay', { order_id: orderId }, { auth: true })
+      wx.showToast({ title: '支付成功', icon: 'success' })
+      this.setData({ orders: [], page: 1, noMore: false })
+      this.loadOrders()
+    } catch (err) {}
+  },
+
   async onCancelOrder(e) {
     const orderId = e.currentTarget.dataset.id
     wx.showModal({
@@ -78,5 +104,10 @@ Page({
         }
       }
     })
+  },
+
+  goProductDetail(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({ url: `/pages/product/detail?id=${id}` })
   }
 })

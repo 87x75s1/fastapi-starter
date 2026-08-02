@@ -4,6 +4,8 @@ const { uploadImage } = require('../../utils/upload')
 
 Page({
   data: {
+    statusBarHeight: 20,
+    navBarHeight: 44,
     isLoggedIn: false,
     userInfo: null,
     nickname: '',
@@ -12,7 +14,18 @@ Page({
     updateLoading: false
   },
 
+  onLoad() {
+    const sysInfo = wx.getSystemInfoSync()
+    this.setData({
+      statusBarHeight: sysInfo.statusBarHeight || 20,
+      navBarHeight: 44
+    })
+  },
+
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 4 })
+    }
     this.checkLoginStatus()
   },
 
@@ -26,6 +39,26 @@ Page({
       nickname: userInfo ? userInfo.nickname || '' : '',
       genderIndex: userInfo ? userInfo.gender || 0 : 0
     })
+
+    // 已登录时自动从服务器刷新用户信息，确保 role 等字段同步
+    if (isLoggedIn) {
+      this.refreshUserInfo()
+    }
+  },
+
+  /** 静默刷新用户信息（不显示loading） */
+  async refreshUserInfo() {
+    try {
+      const data = await http.get('/api/user/me', {}, { auth: true, loading: false })
+      auth.updateUserInfo(data)
+      this.setData({
+        userInfo: data,
+        nickname: data.nickname || '',
+        genderIndex: data.gender || 0
+      })
+    } catch (err) {
+      // 静默失败，使用本地缓存
+    }
   },
 
   goLogin() {
@@ -142,5 +175,15 @@ Page({
   /** 跳转反馈 */
   goFeedback() {
     wx.navigateTo({ url: '/pages/feedback/feedback' })
+  },
+
+  /** 跳转管理后台 */
+  goAdmin() {
+    wx.navigateTo({ url: '/pages/admin/admin' })
+  },
+
+  /** 跳转权限管理 */
+  goAdminPerm() {
+    wx.navigateTo({ url: '/pages/admin-perm/admin-perm' })
   }
 })

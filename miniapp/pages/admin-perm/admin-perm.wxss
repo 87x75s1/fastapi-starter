@@ -1,0 +1,87 @@
+/* 权限管理页 - 浅色商务风格 */
+/* 色板: 深炭灰#2A2A33 / 浅灰底#F7F8FA / 强调色哑光深灰蓝#C45A5A / 警示红#C45A5A */
+.container { background: #F7F8FA; min-height: 100vh; padding-bottom: 40rpx; }
+
+/* 自定义导航栏 */
+.nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background-color: #2A2A33;
+  padding-top: var(--status-bar-height, 44px);
+}
+.nav-bar-inner {
+  display: flex; align-items: center; justify-content: center;
+  height: 88rpx; position: relative;
+}
+.nav-title { font-size: 34rpx; font-weight: 600; color: #FFFFFF; letter-spacing: 2rpx; }
+.nav-back {
+  position: absolute; left: 24rpx; top: 50%; transform: translateY(-50%);
+  width: 56rpx; height: 56rpx; display: flex; align-items: center; justify-content: center;
+}
+.nav-back-arrow { width: 36rpx; height: 36rpx; border-left: 4rpx solid #FFFFFF; border-bottom: 4rpx solid #FFFFFF; transform: rotate(45deg); }
+.nav-placeholder { }
+
+/* 搜索栏 */
+.search-bar {
+  background: #FFFFFF; border-radius: 16rpx; padding: 16rpx 24rpx; margin: 24rpx 24rpx 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+}
+.search-input {
+  width: 100%; height: 68rpx; background: #F7F8FA; border-radius: 12rpx;
+  padding: 0 24rpx; font-size: 26rpx; box-sizing: border-box; color: #333;
+}
+
+/* 统计概览 */
+.stats-row {
+  display: flex; gap: 16rpx; padding: 0 24rpx; margin-bottom: 24rpx;
+}
+.stat-chip {
+  flex: 1; background: #FFFFFF; border-radius: 12rpx; padding: 20rpx 16rpx;
+  text-align: center; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+}
+.stat-chip-num { display: block; font-size: 36rpx; font-weight: 700; color: #C45A5A; }
+.stat-chip-label { display: block; font-size: 22rpx; color: #999999; margin-top: 4rpx; }
+
+/* 用户列表 */
+.user-list { padding: 0 24rpx; }
+
+.user-card {
+  display: flex; align-items: center; background: #FFFFFF;
+  border-radius: 16rpx; padding: 28rpx 24rpx; margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+}
+
+.user-avatar {
+  width: 80rpx; height: 80rpx; border-radius: 50%; background: #C45A5A;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.avatar-text { font-size: 32rpx; font-weight: 600; color: #FFFFFF; }
+
+.user-main { flex: 1; margin-left: 20rpx; overflow: hidden; }
+
+.user-top-row { display: flex; align-items: center; gap: 12rpx; }
+.user-name { font-size: 28rpx; color: #2A2A33; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.role-badge {
+  font-size: 20rpx; padding: 4rpx 12rpx; border-radius: 6rpx; flex-shrink: 0;
+}
+.role-badge-admin { background: #C45A5A; color: #FFFFFF; }
+.role-badge-user { background: #E8E8E8; color: #999999; }
+
+.user-phone { display: block; font-size: 24rpx; color: #999999; margin-top: 6rpx; }
+.user-time { display: block; font-size: 22rpx; color: #CCCCCC; margin-top: 4rpx; }
+
+.user-action { flex-shrink: 0; margin-left: 16rpx; }
+.action-btn {
+  padding: 14rpx 32rpx; border-radius: 10rpx; font-size: 24rpx; text-align: center;
+  font-weight: 500; white-space: nowrap; min-width: 140rpx;
+}
+.action-btn-add {
+  background: #C45A5A; color: #FFFFFF;
+}
+.action-btn-remove {
+  background: #FFFFFF; color: #C45A5A; border: 1rpx solid #C45A5A;
+}
+
+.empty-tip {
+  padding: 80rpx 0; text-align: center; font-size: 28rpx; color: #CCCCCC;
+}

@@ -37,6 +37,20 @@
   padding-top: 16rpx; border-top: 1rpx solid #f0f0f0;
 }
 .order-total { font-size: 28rpx; font-weight: bold; color: #e4393c; }
+.order-actions { display: flex; gap: 16rpx; }
+.btn-pay { font-size: 24rpx; color: #fff; background: #4CAF50; border-radius: 30rpx; border: none; }
 .btn-cancel { font-size: 24rpx; color: #999; border: 1rpx solid #ddd; border-radius: 30rpx; }
+
+.order-address {
+  display: flex; align-items: flex-start;
+  padding: 12rpx 0; font-size: 24rpx; color: #666;
+}
+.address-icon { margin-right: 8rpx; }
+.address-text { flex: 1; line-height: 1.5; }
+
+.cancel-reason {
+  padding-top: 12rpx; font-size: 24rpx; color: #999;
+  border-top: 1rpx solid #f0f0f0; margin-top: 8rpx;
+}
 
 .loading, .no-more, .empty { text-align: center; padding: 40rpx; color: #999; font-size: 26rpx; }

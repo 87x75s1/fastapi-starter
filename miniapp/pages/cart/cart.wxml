@@ -1,0 +1,17 @@
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-title">购物车</view>
+    </view>
+  </view>
+  <view style="height: {{statusBarHeight + navBarHeight}}px;"></view>
+
+  <view class="empty-state">
+    <view class="empty-icon-wrap">
+      <text class="empty-icon-text">◎</text>
+    </view>
+    <text class="empty-text">购物车空空如也</text>
+    <text class="empty-hint">快去挑选心仪的好物吧</text>
+  </view>
+</view>

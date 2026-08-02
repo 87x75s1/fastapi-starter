@@ -4,7 +4,7 @@
  */
 
 // 后端服务地址（开发环境用本地，上线后改为正式域名）
-const BASE_URL = 'http://60.205.126.22:8000'
+const BASE_URL = 'http://127.0.0.1:8000'
 
 /**
  * 封装 wx.request
@@ -49,6 +49,13 @@ function request(url, method = 'GET', data = {}, options = {}) {
         // HTTP 状态码异常
         if (res.statusCode !== 200) {
           const msg = (res.data && res.data.message) || '服务器错误'
+          // 401未授权，清token跳登录
+          if (res.statusCode === 401) {
+            wx.removeStorageSync('token')
+            wx.removeStorageSync('user_info')
+            wx.showToast({ title: '请重新登录', icon: 'none' })
+            setTimeout(() => wx.navigateTo({ url: '/pages/login/login' }), 500)
+          }
           wx.showToast({ title: msg, icon: 'none' })
           reject(new Error(msg))
           return
@@ -65,6 +72,7 @@ function request(url, method = 'GET', data = {}, options = {}) {
       },
       fail(err) {
         if (loading) wx.hideLoading()
+        console.error('[请求失败]', url, err)
         wx.showToast({ title: '网络连接失败', icon: 'none' })
         reject(err)
       }

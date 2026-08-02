@@ -23,6 +23,7 @@ class User(Base):
     # 业务字段
     balance = Column(Integer, default=0, comment="余额（单位：分）")
     status = Column(Integer, default=1, comment="状态：0禁用 1启用")
+    role = Column(Integer, default=0, comment="角色：0普通用户 1管理员")
 
     # 时间字段
     created_at = Column(
@@ -42,6 +43,7 @@ class User(Base):
             "gender": self.gender,
             "balance": self.balance,
             "status": self.status,
+            "role": self.role,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

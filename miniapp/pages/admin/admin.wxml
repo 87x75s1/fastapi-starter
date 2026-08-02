@@ -1,0 +1,185 @@
+<view class="container" wx:if="{{isAdmin}}">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-bar-inner">
+      <view class="nav-back" bindtap="goBack">
+        <view class="nav-back-arrow"></view>
+      </view>
+      <text class="nav-title">管理后台</text>
+    </view>
+  </view>
+  <view class="nav-placeholder" style="height: {{statusBarHeight + 44}}px;"></view>
+
+  <!-- Tab导航 -->
+  <view class="nav">
+    <view class="nav-item {{activeTab === 'stats' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="stats">统计</view>
+    <view class="nav-item {{activeTab === 'product' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="product">商品</view>
+    <view class="nav-item {{activeTab === 'order' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="order">订单</view>
+    <view class="nav-item {{activeTab === 'feedback' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="feedback">反馈</view>
+    <view class="nav-item {{activeTab === 'config' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="config">配置</view>
+    <view class="nav-item {{activeTab === 'user' ? 'nav-active' : ''}}" bindtap="switchTab" data-tab="user">用户</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="panel" wx:if="{{activeTab === 'stats'}}">
+    <view class="stats-grid">
+      <view class="stat-card"><text class="stat-num">{{stats.user_count || 0}}</text><text class="stat-label">用户数</text></view>
+      <view class="stat-card"><text class="stat-num">{{stats.product_count || 0}}</text><text class="stat-label">商品数</text></view>
+      <view class="stat-card"><text class="stat-num">{{stats.order_count || 0}}</text><text class="stat-label">订单数</text></view>
+      <view class="stat-card"><text class="stat-num">{{stats.today_orders || 0}}</text><text class="stat-label">今日订单</text></view>
+    </view>
+  </view>
+
+  <!-- 商品管理 -->
+  <view class="panel" wx:if="{{activeTab === 'product'}}">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <input class="search-input" placeholder="搜索商品名称" placeholder-style="color:#CCCCCC;" value="{{productSearch}}" bindinput="onProductSearch" confirm-type="search" />
+    </view>
+
+    <!-- 分类筛选 -->
+    <scroll-view class="category-bar" scroll-x="true">
+      <view class="cat-item {{productCategory === '' ? 'cat-active' : ''}}" bindtap="onCategoryFilter" data-cat="">全部</view>
+      <view class="cat-item {{productCategory === item ? 'cat-active' : ''}}" wx:for="{{productCategories}}" wx:key="*this" bindtap="onCategoryFilter" data-cat="{{item}}">{{item}}</view>
+    </scroll-view>
+
+    <!-- 添加/编辑商品表单 -->
+    <view class="form-section">
+      <view class="form-title">{{editingProductId ? '编辑商品' : '添加商品'}}</view>
+      <view class="form-group">
+        <text class="form-label"><text class="required">*</text> 商品名称</text>
+        <input class="input" placeholder="请输入名称" placeholder-style="color:#CCCCCC;" value="{{productForm.name}}" bindinput="onProductInput" data-field="name" />
+      </view>
+      <view class="form-group">
+        <text class="form-label"><text class="required">*</text> 价格（元）</text>
+        <input class="input" placeholder="如 19.90" placeholder-style="color:#CCCCCC;" type="digit" value="{{productForm.price}}" bindinput="onProductInput" data-field="price" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">分类</text>
+        <input class="input" placeholder="如：咖啡、茶饮、甜品" placeholder-style="color:#CCCCCC;" value="{{productForm.category}}" bindinput="onProductInput" data-field="category" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">库存</text>
+        <input class="input" placeholder="0 表示不限" placeholder-style="color:#CCCCCC;" type="number" value="{{productForm.stock}}" bindinput="onProductInput" data-field="stock" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">图片地址</text>
+        <input class="input" placeholder="图片URL链接" placeholder-style="color:#CCCCCC;" value="{{productForm.image}}" bindinput="onProductInput" data-field="image" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">商品描述</text>
+        <textarea class="textarea" placeholder="请输入描述" placeholder-style="color:#CCCCCC;" value="{{productForm.description}}" bindinput="onProductInput" data-field="description" auto-height />
+      </view>
+      <view class="form-btns">
+        <button class="btn-primary" bindtap="onSubmitProduct" loading="{{productSubmitting}}">{{editingProductId ? '保存修改' : '添加商品'}}</button>
+        <button class="btn-cancel" wx:if="{{editingProductId}}" bindtap="onCancelEdit">取消编辑</button>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="list-section">
+      <view class="list-header">
+        <text class="list-title">商品列表</text>
+        <text class="list-count">共 {{filteredProducts.length}} 件</text>
+      </view>
+      <view class="product-item" wx:for="{{filteredProducts}}" wx:key="id">
+        <image class="product-img" src="{{item._imgError ? '/assets/default-avatar.png' : (item.full_image || item.image || '/assets/default-avatar.png')}}" mode="aspectFill" binderror="onImgError" data-id="{{item.id}}" />
+        <view class="product-info">
+          <view class="product-name-row">
+            <text class="product-name">{{item.name}}</text>
+            <text class="product-status {{item.status === 1 ? 'status-on' : 'status-off'}}" bindtap="onToggleProductStatus" data-id="{{item.id}}" data-status="{{item.status}}">{{item.status === 1 ? '上架' : '下架'}}</text>
+          </view>
+          <text class="product-desc" wx:if="{{item.description}}">{{item.description}}</text>
+          <view class="product-meta">
+            <text class="product-price">¥{{item.price_text}}</text>
+            <text class="product-stock">库存: {{item.stock || '不限'}}</text>
+            <text class="product-category" wx:if="{{item.category}}">{{item.category}}</text>
+          </view>
+        </view>
+        <view class="product-actions">
+          <text class="btn-edit" bindtap="onEditProduct" data-id="{{item.id}}">编辑</text>
+          <text class="btn-del" bindtap="onDeleteProduct" data-id="{{item.id}}" data-name="{{item.name}}">删除</text>
+        </view>
+      </view>
+      <view class="empty-tip" wx:if="{{filteredProducts.length === 0}}">
+        <text>暂无商品</text>
+      </view>
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{productHasMore}}" bindtap="onLoadMoreProducts">
+        <text>加载更多</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单管理 -->
+  <view class="panel" wx:if="{{activeTab === 'order'}}">
+    <view class="order-item" wx:for="{{orders}}" wx:key="id">
+      <view class="order-header"><text class="order-no">{{item.order_no}}</text><text class="order-amount">¥{{item.total_amount_text}}</text></view>
+      <view class="order-items" wx:for="{{item.items}}" wx:for-item="oi" wx:key="id">
+        <text>{{oi.product_name}} x{{oi.quantity}}</text>
+      </view>
+      <view class="order-footer">
+        <text class="status-text status-{{item.status}}">{{orderStatusMap[item.status]}}</text>
+        <view class="order-btns">
+          <button wx:if="{{item.status === 0}}" size="mini" bindtap="onUpdateOrderStatus" data-id="{{item.id}}" data-status="1">确认付款</button>
+          <button wx:if="{{item.status === 1}}" size="mini" bindtap="onUpdateOrderStatus" data-id="{{item.id}}" data-status="2">完成</button>
+        </view>
+      </view>
+    </view>
+    <view class="empty-tip" wx:if="{{orders.length === 0}}"><text>暂无订单</text></view>
+  </view>
+
+  <!-- 反馈管理 -->
+  <view class="panel" wx:if="{{activeTab === 'feedback'}}">
+    <view class="feedback-item" wx:for="{{feedbacks}}" wx:key="id">
+      <view class="fb-header">
+        <text class="fb-status {{item.status === 0 ? 'fb-pending' : 'fb-done'}}">{{item.status === 0 ? '待处理' : '已回复'}}</text>
+      </view>
+      <text class="fb-content">{{item.content}}</text>
+      <view class="fb-reply" wx:if="{{item.reply}}"><text>回复：{{item.reply}}</text></view>
+      <view class="fb-action" wx:if="{{item.status === 0}}">
+        <input class="reply-input" placeholder="输入回复内容" placeholder-style="color:#CCCCCC;" value="{{replyContent}}" bindinput="onReplyInput" />
+        <button size="mini" bindtap="onReplyFeedback" data-id="{{item.id}}">回复</button>
+      </view>
+    </view>
+    <view class="empty-tip" wx:if="{{feedbacks.length === 0}}"><text>暂无反馈</text></view>
+  </view>
+
+  <!-- 配置管理 -->
+  <view class="panel" wx:if="{{activeTab === 'config'}}">
+    <view class="form-section">
+      <view class="form-title">添加配置</view>
+      <view class="form-group">
+        <text class="form-label"><text class="required">*</text> 配置键</text>
+        <input class="input" placeholder="如 app_name" placeholder-style="color:#CCCCCC;" value="{{configForm.key}}" bindinput="onConfigInput" data-field="key" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">配置值</text>
+        <input class="input" placeholder="请输入配置值" placeholder-style="color:#CCCCCC;" value="{{configForm.value}}" bindinput="onConfigInput" data-field="value" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">说明</text>
+        <input class="input" placeholder="配置用途说明" placeholder-style="color:#CCCCCC;" value="{{configForm.description}}" bindinput="onConfigInput" data-field="description" />
+      </view>
+      <button class="btn-primary" bindtap="onCreateConfig" loading="{{configSubmitting}}">添加配置</button>
+    </view>
+    <view class="list-section">
+      <view class="list-item" wx:for="{{configs}}" wx:key="id">
+        <view class="config-info"><text class="config-key">{{item.key}}</text><text class="config-val">{{item.value}}</text></view>
+        <text class="btn-del" bindtap="onDeleteConfig" data-id="{{item.id}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户管理 -->
+  <view class="panel" wx:if="{{activeTab === 'user'}}">
+    <view class="user-item" wx:for="{{users}}" wx:key="id">
+      <view class="user-info">
+        <text class="user-name">{{item.nickname || item.phone}}</text>
+        <text class="role-tag {{item.role === 1 ? 'role-admin' : ''}}">{{item.role === 1 ? '管理员' : '用户'}}</text>
+      </view>
+      <view class="btn-role-toggle {{item.role === 1 ? 'btn-role-remove' : 'btn-role-add'}}" bindtap="onToggleRole" data-id="{{item.id}}" data-role="{{item.role}}">{{item.role === 1 ? '取消管理' : '设为管理'}}</view>
+    </view>
+    <view class="empty-tip" wx:if="{{users.length === 0}}"><text>暂无用户</text></view>
+  </view>
+</view>

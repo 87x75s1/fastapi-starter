@@ -1,83 +1,60 @@
-const { http, BASE_URL } = require('../../utils/request')
-const auth = require('../../utils/auth')
-const { uploadImage } = require('../../utils/upload')
-
 Page({
   data: {
-    baseUrl: BASE_URL,
-    connected: false,
-    isLoggedIn: false,
-    techStack: [
-      { name: 'FastAPI', desc: '高性能异步 Web 框架' },
-      { name: 'SQLAlchemy 2.0', desc: '异步 ORM 数据库操作' },
-      { name: 'Pydantic v2', desc: '数据校验与序列化' },
-      { name: 'JWT', desc: '无状态令牌认证' },
-      { name: 'bcrypt', desc: '安全密码哈希' },
-      { name: 'SQLite', desc: '轻量级数据库（可切换 MySQL）' }
+    statusBarHeight: 20,
+    navBarHeight: 44,
+    noticeText: '新用户首单立减10元 · 全场满99包邮 · 品质保障',
+    featuredProducts: [
+      { id: 1, name: '北欧简约陶瓷花瓶 客厅摆件', price: 89, sales: 1286, image: '' },
+      { id: 2, name: '头层牛皮商务手提包 大容量', price: 459, sales: 823, image: '' },
+      { id: 3, name: '日式手冲咖啡壶套装 玻璃', price: 168, sales: 2156, image: '' },
+      { id: 4, name: '纯棉高支床品四件套 素色', price: 329, sales: 1547, image: '' },
+      { id: 5, name: '智能香薰机 静音雾化 卧室', price: 199, sales: 976, image: '' },
+      { id: 6, name: '真皮极简钱包 短款头层牛皮', price: 239, sales: 678, image: '' }
+    ],
+    qualityProducts: [
+      { id: 7, name: '无线蓝牙降噪耳机 头戴式', price: 599, sales: 934, image: '' },
+      { id: 8, name: '德国不锈钢厨具五件套', price: 388, sales: 1567, image: '' },
+      { id: 9, name: '羊绒围巾 纯色 经典款', price: 268, sales: 478, image: '' },
+      { id: 10, name: '实木书架落地式 四层', price: 459, sales: 321, image: '' },
+      { id: 11, name: '机械键盘87键 茶轴 复古', price: 349, sales: 2890, image: '' },
+      { id: 12, name: '便携式投影仪 家用高清', price: 1299, sales: 432, image: '' }
     ]
   },
 
-  onShow() {
-    this.setData({ isLoggedIn: auth.isLoggedIn() })
-    this.checkBackendHealth()
-  },
-
-  /** 检查后端健康状态 */
-  async checkBackendHealth() {
-    try {
-      await http.get('/health', {}, { loading: false, auth: false })
-      this.setData({ connected: true })
-    } catch (err) {
-      this.setData({ connected: false })
-    }
-  },
-
-  /** 跳转个人中心 */
-  goProfile() {
-    wx.switchTab({ url: '/pages/profile/profile' })
-  },
-
-  /** 上传图片 */
-  async goUpload() {
-    if (!auth.isLoggedIn()) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      setTimeout(() => {
-        wx.navigateTo({ url: '/pages/login/login' })
-      }, 500)
-      return
-    }
-
-    try {
-      const result = await uploadImage()
-      wx.showModal({
-        title: '上传成功',
-        content: `文件: ${result.filename}\n大小: ${(result.file_size / 1024).toFixed(1)}KB\nURL: ${result.file_url}`,
-        showCancel: false
-      })
-    } catch (err) {
-      // 用户取消或上传失败
-    }
-  },
-
-  /** 跳转登录 */
-  goLogin() {
-    if (auth.isLoggedIn()) {
-      wx.showToast({ title: '已登录', icon: 'success' })
-    } else {
-      wx.navigateTo({ url: '/pages/login/login' })
-    }
-  },
-
-  /** 检查后端连接 */
-  checkBackend() {
-    wx.showLoading({ title: '检测中...' })
-    this.checkBackendHealth().then(() => {
-      wx.hideLoading()
-      if (this.data.connected) {
-        wx.showToast({ title: '后端连接正常', icon: 'success' })
-      } else {
-        wx.showToast({ title: '后端连接失败', icon: 'none' })
-      }
+  onLoad() {
+    const sysInfo = wx.getSystemInfoSync()
+    this.setData({
+      statusBarHeight: sysInfo.statusBarHeight || 20,
+      navBarHeight: 44
     })
+  },
+
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 0 })
+    }
+  },
+
+  onImgError() {},
+
+  onProductTap(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({ url: '/pages/product/detail?id=' + id })
+  },
+
+  onAddCart(e) {
+    wx.showToast({ title: '已加入购物车', icon: 'success', duration: 1500 })
+  },
+
+  onViewMore() {
+    wx.switchTab({ url: '/pages/category/category' })
+  },
+
+  onSearchTap() {
+    wx.switchTab({ url: '/pages/category/category' })
+  },
+
+  onMessageTap() {
+    wx.showToast({ title: '暂无新消息', icon: 'none', duration: 1500 })
   }
 })

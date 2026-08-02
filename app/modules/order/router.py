@@ -99,6 +99,6 @@ async def cancel_order(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """取消订单（将状态设为3）"""
-    order = await OrderService.update_status(db, order_id, 3)
+    """取消订单（将状态设为3，恢复库存）"""
+    order = await OrderService.update_status(db, order_id, 3, cancel_reason="用户取消")
     return success(data=_order_to_response(order), message="订单已取消")

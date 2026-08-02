@@ -25,17 +25,32 @@ async def create_product(req: ProductCreateRequest, db: AsyncSession = Depends(g
     return success(data=ProductResponse.model_validate(product).model_dump(), message="创建成功")
 
 
+@router.get("/categories", summary="商品分类列表")
+async def get_categories(db: AsyncSession = Depends(get_db)):
+    """获取所有商品分类（从已有商品中提取去重）"""
+    categories = await ProductService.get_categories(db)
+    return success(data=categories)
+
+
 @router.get("/list", summary="商品列表")
 async def get_product_list(
+    keyword: str = Query(None, description="关键词搜索（名称/描述）"),
     category: str = Query(None, description="分类筛选"),
     status: int = Query(None, description="状态筛选：0下架 1上架"),
+    min_price: int = Query(None, ge=0, description="最低价格（分）"),
+    max_price: int = Query(None, ge=0, description="最高价格（分）"),
+    sort: str = Query("default", description="排序方式：default/price_asc/price_desc/newest"),
     page: int = Query(1, ge=1, description="页码"),
     page_size: int = Query(20, ge=1, le=100, description="每页数量"),
     db: AsyncSession = Depends(get_db),
 ):
-    """获取商品列表，支持按分类和状态筛选"""
+    """获取商品列表，支持关键词搜索、分类、价格区间筛选和排序"""
     offset = (page - 1) * page_size
-    result = await ProductService.get_list_by_category(db, category, status, offset, page_size)
+    result = await ProductService.get_list_filtered(
+        db, keyword=keyword, category=category, status=status,
+        min_price=min_price, max_price=max_price, sort=sort,
+        offset=offset, limit=page_size,
+    )
     items = [ProductResponse.model_validate(item).model_dump() for item in result["items"]]
     return success(data={"items": items, "total": result["total"], "page": result["page"],
                          "page_size": result["page_size"], "total_pages": result["total_pages"]})

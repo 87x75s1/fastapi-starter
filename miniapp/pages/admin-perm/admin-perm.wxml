@@ -1,0 +1,59 @@
+<view class="container" wx:if="{{isAdmin}}">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-bar-inner">
+      <view class="nav-back" bindtap="goBack">
+        <view class="nav-back-arrow"></view>
+      </view>
+      <text class="nav-title">权限管理</text>
+    </view>
+  </view>
+  <view class="nav-placeholder" style="height: {{statusBarHeight + 44}}px;"></view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索用户昵称/手机号" placeholder-style="color:#CCCCCC;" value="{{searchKey}}" bindinput="onSearch" confirm-type="search" />
+  </view>
+
+  <!-- 统计概览 -->
+  <view class="stats-row">
+    <view class="stat-chip">
+      <text class="stat-chip-num">{{users.length}}</text>
+      <text class="stat-chip-label">总用户</text>
+    </view>
+    <view class="stat-chip">
+      <text class="stat-chip-num">{{adminCount}}</text>
+      <text class="stat-chip-label">管理员</text>
+    </view>
+    <view class="stat-chip">
+      <text class="stat-chip-num">{{users.length - adminCount}}</text>
+      <text class="stat-chip-label">普通用户</text>
+    </view>
+  </view>
+
+  <!-- 用户列表 -->
+  <view class="user-list">
+    <view class="user-card" wx:for="{{filteredUsers}}" wx:key="id">
+      <view class="user-avatar">
+        <text class="avatar-text">{{item._avatarText}}</text>
+      </view>
+      <view class="user-main">
+        <view class="user-top-row">
+          <text class="user-name">{{item.nickname || item.phone || '未知用户'}}</text>
+          <text class="role-badge {{item.role === 1 ? 'role-badge-admin' : 'role-badge-user'}}">{{item.role === 1 ? '管理员' : '普通用户'}}</text>
+        </view>
+        <text class="user-phone" wx:if="{{item.phone}}">{{item.phone}}</text>
+        <text class="user-time" wx:if="{{item.created_at}}">注册时间：{{item.created_at}}</text>
+      </view>
+      <view class="user-action">
+        <view class="action-btn {{item.role === 1 ? 'action-btn-remove' : 'action-btn-add'}}" bindtap="onToggleRole" data-id="{{item.id}}" data-role="{{item.role}}">
+          <text>{{item.role === 1 ? '移除权限' : '授权管理'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-tip" wx:if="{{filteredUsers.length === 0}}">
+      <text>暂无用户数据</text>
+    </view>
+  </view>
+</view>

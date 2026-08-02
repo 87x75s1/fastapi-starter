@@ -1,44 +1,65 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/product/product",
+    "pages/category/category",
+    "pages/service/service",
+    "pages/cart/cart",
     "pages/profile/profile",
+    "pages/product/product",
+    "pages/product/detail",
     "pages/login/login",
     "pages/register/register",
     "pages/order/order",
     "pages/address/address",
-    "pages/feedback/feedback"
+    "pages/address/edit",
+    "pages/feedback/feedback",
+    "pages/admin/admin",
+    "pages/admin-perm/admin-perm"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#4CAF50",
-    "navigationBarTitleText": "FastAPI小程序",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#f5f5f5"
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "优品商城",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F8F9FA",
+    "navigationStyle": "custom"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#4CAF50",
-    "backgroundColor": "#ffffff",
+    "custom": true,
+    "color": "#BBBBBB",
+    "selectedColor": "#3A3A3A",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "assets/home.png",
-        "selectedIconPath": "assets/home-active.png"
+        "iconPath": "assets/tab-home.png",
+        "selectedIconPath": "assets/tab-home-active.png"
       },
       {
-        "pagePath": "pages/product/product",
-        "text": "商品",
-        "iconPath": "assets/home.png",
-        "selectedIconPath": "assets/home-active.png"
+        "pagePath": "pages/category/category",
+        "text": "分类",
+        "iconPath": "assets/tab-category.png",
+        "selectedIconPath": "assets/tab-category-active.png"
+      },
+      {
+        "pagePath": "pages/service/service",
+        "text": "客服",
+        "iconPath": "assets/tab-service.png",
+        "selectedIconPath": "assets/tab-service-active.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "assets/tab-cart.png",
+        "selectedIconPath": "assets/tab-cart-active.png"
       },
       {
         "pagePath": "pages/profile/profile",
         "text": "我的",
-        "iconPath": "assets/user.png",
-        "selectedIconPath": "assets/user-active.png"
+        "iconPath": "assets/tab-user.png",
+        "selectedIconPath": "assets/tab-user-active.png"
       }
     ]
   },

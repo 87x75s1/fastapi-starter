@@ -1,84 +1,80 @@
 <view class="container">
-  <!-- 未登录状态 -->
-  <view class="not-logged" wx:if="{{!isLoggedIn}}">
-    <view class="avatar-wrap" bindtap="goLogin">
-      <image class="avatar-default" src="/assets/default-avatar.png" mode="aspectFill"></image>
+  <!-- 自定义导航栏(深色) -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px;">
+      <view class="nav-title">我的</view>
     </view>
-    <text class="nickname-default">点击登录</text>
-    <text class="tip">登录后享受更多功能</text>
   </view>
+  <view style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-  <!-- 已登录状态 -->
-  <view class="logged" wx:if="{{isLoggedIn}}">
-    <!-- 用户信息卡片 -->
-    <view class="user-card">
+  <!-- 用户信息区域(深灰背景) -->
+  <view class="user-header">
+    <!-- 未登录 -->
+    <view class="not-logged" wx:if="{{!isLoggedIn}}" bindtap="goLogin">
+      <view class="avatar-wrap">
+        <view class="avatar-placeholder"></view>
+      </view>
+      <view class="user-info-wrap">
+        <text class="nickname-default">点击登录</text>
+        <text class="tip-text">登录后享受更多功能</text>
+      </view>
+    </view>
+    <!-- 已登录 -->
+    <view class="logged" wx:if="{{isLoggedIn}}">
       <view class="avatar-wrap" bindtap="onChangeAvatar">
-        <image class="avatar" src="{{userInfo.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
-        <view class="avatar-edit">
+        <image class="avatar-img" src="{{userInfo.avatar || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="avatar-edit-badge">
           <text class="edit-icon">📷</text>
         </view>
       </view>
-      <view class="user-info">
+      <view class="user-info-wrap">
         <text class="nickname">{{userInfo.nickname || '未设置昵称'}}</text>
         <text class="phone">{{userInfo.phone}}</text>
       </view>
     </view>
+  </view>
 
-    <!-- 编辑资料 -->
-    <view class="section">
-      <view class="section-title">个人资料</view>
-
-      <view class="form-item">
-        <text class="label">昵称</text>
-        <input
-          class="input"
-          placeholder="请输入昵称"
-          maxlength="50"
-          value="{{nickname}}"
-          bindinput="onNicknameInput"
-        />
-      </view>
-
-      <view class="form-item">
-        <text class="label">性别</text>
-        <picker class="picker" mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGenderChange">
-          <text class="picker-text">{{genderOptions[genderIndex]}}</text>
-          <text class="picker-arrow">▸</text>
-        </picker>
-      </view>
-
-      <button class="btn-primary" bindtap="onUpdateProfile" loading="{{updateLoading}}">
-        保存修改
-      </button>
+  <!-- 个人资料卡片 -->
+  <view class="card-section">
+    <view class="card-title">个人资料</view>
+    <view class="form-item">
+      <text class="form-label">昵称</text>
+      <input class="form-input" placeholder="请输入昵称" maxlength="50" value="{{nickname}}" bindinput="onNicknameInput" />
     </view>
-
-    <!-- 功能列表 -->
-    <view class="section">
-      <view class="section-title">我的服务</view>
-      <view class="menu-item" bindtap="goOrders">
-        <text class="menu-text">我的订单</text>
-        <text class="menu-arrow">▸</text>
-      </view>
-      <view class="menu-item" bindtap="goAddress">
-        <text class="menu-text">收货地址</text>
-        <text class="menu-arrow">▸</text>
-      </view>
-      <view class="menu-item" bindtap="goFeedback">
-        <text class="menu-text">意见反馈</text>
-        <text class="menu-arrow">▸</text>
-      </view>
+    <view class="form-item">
+      <text class="form-label">性别</text>
+      <picker class="form-picker" mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGenderChange">
+        <text class="picker-text">{{genderOptions[genderIndex]}}</text>
+        <text class="picker-arrow">▸</text>
+      </picker>
     </view>
+    <button class="btn-save" bindtap="onUpdateProfile" loading="{{updateLoading}}">保存修改</button>
+  </view>
 
-    <view class="section">
-      <view class="section-title">其他</view>
-      <view class="menu-item" bindtap="onRefreshInfo">
-        <text class="menu-text">刷新用户信息</text>
-        <text class="menu-arrow">▸</text>
-      </view>
-      <view class="menu-item" bindtap="onLogout">
-        <text class="menu-text logout-text">退出登录</text>
-        <text class="menu-arrow">▸</text>
-      </view>
+  <!-- 我的服务卡片 -->
+  <view class="card-section">
+    <view class="card-title">我的服务</view>
+    <view class="menu-item" bindtap="goOrders">
+      <text class="menu-text">我的订单</text>
+      <text class="menu-arrow">▸</text>
+    </view>
+    <view class="menu-item" bindtap="goAddress">
+      <text class="menu-text">收货地址</text>
+      <text class="menu-arrow">▸</text>
+    </view>
+    <view class="menu-item" bindtap="goFeedback">
+      <text class="menu-text">意见反馈</text>
+      <text class="menu-arrow">▸</text>
+    </view>
+    <view class="menu-item" bindtap="goAdmin" wx:if="{{userInfo.role === 1}}">
+      <text class="menu-text">管理后台</text>
+      <text class="menu-arrow">▸</text>
+    </view>
+    <view class="menu-item" bindtap="goAdminPerm" wx:if="{{userInfo.role === 1}}">
+      <text class="menu-text">权限管理</text>
+      <text class="menu-arrow">▸</text>
     </view>
   </view>
+
+  <view class="bottom-space"></view>
 </view>

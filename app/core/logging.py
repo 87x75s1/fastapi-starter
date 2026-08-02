@@ -33,7 +33,8 @@ def setup_logging():
     )
 
     # 降低第三方库日志级别，减少噪音
-    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    # uvicorn.access 保留 INFO，显示请求日志（如 "GET /api/user/login 200"）
+    logging.getLogger("uvicorn.access").setLevel(logging.INFO)
     logging.getLogger("sqlalchemy.engine").setLevel(
         logging.INFO if settings.DEBUG else logging.WARNING
     )

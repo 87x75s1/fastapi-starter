@@ -19,6 +19,7 @@ from app.core.database import create_tables
 from app.core.exceptions import BusinessException
 from app.core.response import success, error
 from app.core.logging import setup_logging
+from app.middlewares.request_log import RequestLogMiddleware
 
 # 导入模块路由
 from app.modules.user.router import router as user_router
@@ -28,6 +29,8 @@ from app.modules.order.router import router as order_router
 from app.modules.address.router import router as address_router
 from app.modules.feedback.router import router as feedback_router
 from app.modules.sys_config.router import router as sys_config_router
+from app.modules.admin.router import router as admin_router
+from app.modules.payment.router import router as payment_router
 
 settings = get_settings()
 
@@ -52,6 +55,14 @@ async def lifespan(app: FastAPI):
     # 自动创建所有数据库表
     await create_tables()
 
+    # 初始化默认管理员账号
+    from app.core.init_data import init_admin_user
+    await init_admin_user()
+
+    # 启动超时订单自动取消定时任务
+    from app.core.scheduler import start_scheduler
+    start_scheduler()
+
     print(f"🚀 {settings.APP_NAME} v{settings.APP_VERSION} 启动成功！")
     print(f"📖 接口文档：http://127.0.0.1:8000/docs")
 
@@ -66,6 +77,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+# ========== 请求日志中间件 ==========
+app.add_middleware(RequestLogMiddleware)
 
 # ========== CORS 中间件（小程序前端跨域支持）==========
 
@@ -115,6 +129,8 @@ app.include_router(order_router)
 app.include_router(address_router)
 app.include_router(feedback_router)
 app.include_router(sys_config_router)
+app.include_router(admin_router)
+app.include_router(payment_router)
 
 
 # ========== 健康检查 ==========

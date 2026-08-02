@@ -17,6 +17,9 @@ class Order(Base):
     status = Column(Integer, default=0, comment="状态：0待付款 1已付款 2已完成 3已取消")
     remark = Column(String(500), default="", comment="订单备注")
     address_snapshot = Column(Text, default="", comment="收货地址快照（JSON）")
+    paid_at = Column(DateTime, nullable=True, comment="支付时间")
+    completed_at = Column(DateTime, nullable=True, comment="完成时间")
+    cancel_reason = Column(String(200), default="", comment="取消原因")
     created_at = Column(DateTime, server_default=func.now(), comment="创建时间")
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), comment="更新时间")
 
@@ -32,6 +35,9 @@ class Order(Base):
             "status": self.status,
             "remark": self.remark,
             "address_snapshot": self.address_snapshot,
+            "paid_at": self.paid_at.isoformat() if self.paid_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "cancel_reason": self.cancel_reason,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

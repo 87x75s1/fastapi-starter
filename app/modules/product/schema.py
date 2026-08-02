@@ -15,6 +15,7 @@ class ProductCreateRequest(BaseModel):
     price: int = Field(..., ge=0, description="价格（单位：分）")
     image: str = Field("", max_length=255, description="商品图片URL")
     category: str = Field("", max_length=50, description="分类")
+    stock: int = Field(0, ge=0, description="库存数量，0表示不限")
     sort_order: int = Field(0, ge=0, description="排序值")
 
 
@@ -25,6 +26,7 @@ class ProductUpdateRequest(BaseModel):
     price: Optional[int] = Field(None, ge=0, description="价格（单位：分）")
     image: Optional[str] = Field(None, max_length=255, description="商品图片URL")
     category: Optional[str] = Field(None, max_length=50, description="分类")
+    stock: Optional[int] = Field(None, ge=0, description="库存数量")
     status: Optional[int] = Field(None, ge=0, le=1, description="状态：0下架 1上架")
     sort_order: Optional[int] = Field(None, ge=0, description="排序值")
 
@@ -39,9 +41,10 @@ class ProductResponse(BaseModel):
     price: int = 0
     image: str = ""
     category: str = ""
+    stock: int = 0
     status: int = 1
     sort_order: int = 0
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}

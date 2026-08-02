@@ -48,6 +48,7 @@ class UserInfoResponse(BaseModel):
     gender: int = 0
     balance: int = 0
     status: int = 1
+    role: int = 0
 
     model_config = {"from_attributes": True}
 

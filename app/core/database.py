@@ -50,3 +50,18 @@ async def create_tables():
     """启动时自动创建所有表（根据 Base 元数据）"""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+    # 兼容旧数据库：为已有表添加新字段（如果不存在）
+    async with engine.begin() as conn:
+        alter_statements = [
+            "ALTER TABLE users ADD COLUMN role INTEGER DEFAULT 0",
+            "ALTER TABLE products ADD COLUMN stock INTEGER DEFAULT 0",
+            "ALTER TABLE orders ADD COLUMN paid_at TEXT",
+            "ALTER TABLE orders ADD COLUMN completed_at TEXT",
+            "ALTER TABLE orders ADD COLUMN cancel_reason VARCHAR(200) DEFAULT ''",
+        ]
+        for sql in alter_statements:
+            try:
+                await conn.execute(__import__('sqlalchemy').text(sql))
+            except Exception:
+                pass  # 字段已存在，忽略

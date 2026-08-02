@@ -12,24 +12,40 @@
   <view class="order-list">
     <view class="order-card" wx:for="{{orders}}" wx:key="id">
       <view class="order-header">
-        <text class="order-no">订单号：{{item.order_no}}</text>
+        <text class="order-no">{{item.order_no}}</text>
         <text class="order-status status-{{item.status}}">{{statusMap[item.status]}}</text>
       </view>
+
+      <!-- 地址信息 -->
+      <view class="order-address" wx:if="{{item.address_info}}">
+        <text class="address-icon">📍</text>
+        <text class="address-text">{{item.address_info.name}} {{item.address_info.phone}} {{item.address_info.province}}{{item.address_info.city}}{{item.address_info.district}} {{item.address_info.detail}}</text>
+      </view>
+
       <view class="order-items">
-        <view class="order-item" wx:for="{{item.items}}" wx:for-item="oi" wx:key="id">
+        <view class="order-item" wx:for="{{item.items}}" wx:for-item="oi" wx:key="id"
+              bindtap="goProductDetail" data-id="{{oi.product_id}}">
           <image class="item-image" src="{{oi.product_image || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
           <view class="item-info">
             <text class="item-name">{{oi.product_name}}</text>
-            <text class="item-price">¥{{(oi.price / 100).toFixed(2)}} × {{oi.quantity}}</text>
+            <text class="item-price">¥{{oi.price_text}} × {{oi.quantity}}</text>
           </view>
         </view>
       </view>
+
       <view class="order-footer">
-        <text class="order-total">合计：¥{{(item.total_amount / 100).toFixed(2)}}</text>
+        <text class="order-total">合计：¥{{item.total_amount_text}}</text>
         <view class="order-actions">
+          <button class="btn-pay" wx:if="{{item.status === 0}}"
+                  bindtap="onPayOrder" data-id="{{item.id}}" size="mini">立即支付</button>
           <button class="btn-cancel" wx:if="{{item.status === 0}}"
-                  bindtap="onCancelOrder" data-id="{{item.id}}" size="mini">取消订单</button>
+                  bindtap="onCancelOrder" data-id="{{item.id}}" size="mini">取消</button>
         </view>
+      </view>
+
+      <!-- 取消原因 -->
+      <view class="cancel-reason" wx:if="{{item.status === 3 && item.cancel_reason}}">
+        <text>取消原因：{{item.cancel_reason}}</text>
       </view>
     </view>
   </view>
